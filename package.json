@@ -1,24 +1,22 @@
 {
-  "name": "merge-img",
-  "version": "2.1.2",
-  "description": "Merge multiple images into a single image",
+  "name": "combine-image",
+  "version": "1.0.0",
+  "description": "Combine/Merge multiple images into a single image",
   "author": "Danish Kamal <danish5095@gmail.com>",
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "npm run test && npm run build",
     "prebuild": "npm run clean",
-    "test": "eslint . && jest",
     "build": "babel --out-dir lib src",
     "clean": "rimraf lib"
   },
   "engines": {
-    "node": ">= 4"
+    "node": ">= 6"
   },
   "license": "MIT",
-  "homepage": "https://github.com/preco21/merge-img#readme",
-  "repository": "preco21/merge-img",
+  "repository": "danish1994/combine-image",
   "bugs": {
-    "url": "https://github.com/preco21/merge-img/issues"
+    "url": "https://github.com/danish1994/combine-image/issues"
   },
   "files": [
     "lib"
@@ -29,7 +27,9 @@
     "compose",
     "image",
     "manipulation",
-    "merge"
+    "merge",
+    "combine",
+    "same size"
   ],
   "dependencies": {
     "is-plain-obj": "^1.1.0",
