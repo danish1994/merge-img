@@ -4,7 +4,7 @@ import alignImage from './utils/alignImage';
 import calcMargin from './utils/calcMargin';
 
 export default function mergeImg(images, {
-  direction = false,
+  direction = 'col',
   color = 0x00000000,
   align = 'start',
   offset = 0,
@@ -33,6 +33,8 @@ export default function mergeImg(images, {
     return read(img).then((imgObj) => ({img: imgObj}));
   };
 
+  direction = direction === 'row';
+
   return Promise.all(images.map(processImg))
     .then((imgs) => {
       let totalX = 0;
@@ -43,10 +45,12 @@ export default function mergeImg(images, {
 
         res.push({
           img,
-          x: totalX + offsetX,
-          y: totalY + offsetY,
+          x: offsetX,
+          y: offsetY,
           offsetX,
           offsetY,
+          width,
+          height
         });
 
         totalX += width + offsetX;
@@ -55,17 +59,29 @@ export default function mergeImg(images, {
         return res;
       }, []);
 
+      console.log(imgData)
+
       const {top, right, bottom, left} = calcMargin(margin);
       const marginTopBottom = top + bottom;
       const marginRightLeft = right + left;
 
+      // const totalWidth = direction
+      //   ? Math.max(...imgData.map(({img: {bitmap: {width}}, offsetX}) => width + offsetX))
+      //   : imgData.reduce((res, {img: {bitmap: {width}}, offsetX}, index) => res + width + offsetX + (Number(index > 0) * offset), 0);
+      //
+      // const totalHeight = direction
+      //   ? imgData.reduce((res, {img: {bitmap: {height}}, offsetY}, index) => res + height + offsetY + (Number(index > 0) * offset), 0)
+      //   : Math.max(...imgData.map(({img: {bitmap: {height}}, offsetY}) => height + offsetY));
+
       const totalWidth = direction
-        ? Math.max(...imgData.map(({img: {bitmap: {width}}, offsetX}) => width + offsetX))
-        : imgData.reduce((res, {img: {bitmap: {width}}, offsetX}, index) => res + width + offsetX + (Number(index > 0) * offset), 0);
+        ? Math.max(...imgData.map((el) => el.width))
+        : Math.max(...imgData.map((el) => el.height));
 
       const totalHeight = direction
-        ? imgData.reduce((res, {img: {bitmap: {height}}, offsetY}, index) => res + height + offsetY + (Number(index > 0) * offset), 0)
-        : Math.max(...imgData.map(({img: {bitmap: {height}}, offsetY}) => height + offsetY));
+        ? Math.max(...imgData.map((el) => el.height))
+        : Math.max(...imgData.map((el) => el.width));
+
+      console.log(totalHeight, totalWidth);
 
       const baseImage = new Jimp(totalWidth + marginRightLeft, totalHeight + marginTopBottom, color);
 
